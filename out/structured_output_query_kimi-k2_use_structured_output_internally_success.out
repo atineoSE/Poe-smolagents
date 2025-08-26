@@ -1,0 +1,17 @@
+╭──────────────────────────────────────────────────────────────────────── New run ────────────────────────────────────────────────────────────────────────╮
+│                                                                                                                                                         │
+│ What is the system information?                                                                                                                         │
+│                                                                                                                                                         │
+╰─ OpenAIServerModel - Kimi-K2 ───────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────╯
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ Step 1 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Output message of the LLM: ────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────
+{"thought": "The task asks for system information. I have a tool called `get_system_info()` which collects basic system metrics. I should use this to get  
+the system information and provide it as the final answer.", "code": "system_info = get_system_info()\nfinal_answer(system_info)"}                         
+ ─ Executing parsed code: ──────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────── 
+  system_info = get_system_info()                                                                                                                          
+  final_answer(system_info)                                                                                                                                
+ ───────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────── 
+Final answer: cpu_percent=16.3 memory_total_mb=16384 memory_used_mb=5476
+[Step 1: Duration 3.03 seconds| Input tokens: 1,782 | Output tokens: 62]
+Result: cpu_percent=16.3 memory_total_mb=16384 memory_used_mb=5476
+<class '__main__.System'>
