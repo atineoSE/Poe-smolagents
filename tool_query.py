@@ -1,7 +1,8 @@
 import psutil
-from smolagents import CodeAgent, tool
+from smolagents import tool
 
 from llm import model
+from poe_code_agent import PoeCodeAgent
 
 
 @tool
@@ -38,5 +39,5 @@ def get_system_info() -> dict:
 
 
 if __name__ == "__main__":
-    agent = CodeAgent(tools=[get_system_info], model=model, verbosity_level=2)
+    agent = PoeCodeAgent(tools=[get_system_info], model=model, verbosity_level=2)
     agent.run("Tell me the system specs", max_steps=3)
