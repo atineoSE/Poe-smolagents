@@ -1,3 +1,4 @@
+import json
 import re
 from collections.abc import Generator
 from typing import Any
@@ -52,6 +53,20 @@ def extract_code_from_text(text: str, code_block_tags: tuple[str, str]) -> str |
         return matches[-1].strip()
         # -------
     return None
+
+
+def extract_internal_structure_text(text: str) -> str:
+    """
+    Return the substring starting with the first occurrence of
+    ``{\\s*"thought":``. .
+    """
+    # Find the start of the target JSON object
+    start_match = re.search(r'\{\s*"thought"\s*:', text)
+    if not start_match:
+        return text
+
+    # Slice from the opening brace to the end of the string
+    return text[start_match.start() :]
 
 
 class PoeCodeAgent(CodeAgent):
@@ -132,8 +147,15 @@ class PoeCodeAgent(CodeAgent):
         ### Parse output ###
         try:
             if self._use_structured_outputs_internally:
-                # UPDATED: add a pre-processing step
+                # UPDATED: add a pre-processing step to extract the json data.
+                # It helps with thinking models, which add their thoughts before
+                # the structured output.
+                # BEFORE:
                 # code_action = json.loads(output_text)["code"]
+                # AFTER:
+                pre_processed_output_text = extract_internal_structure_text(output_text)
+                code_action = json.loads(pre_processed_output_text)["code"]
+                # -------
                 code_action = (
                     extract_code_from_text(code_action, self.code_block_tags)
                     or code_action

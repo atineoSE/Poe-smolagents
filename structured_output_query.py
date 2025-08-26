@@ -49,4 +49,4 @@ if __name__ == "__main__":
     )
     result = agent.run("What is the system information?", max_steps=3)
     print(f"Result: {result}")
-    print(type(result))
+    print(f"Result type: {type(result)}")
