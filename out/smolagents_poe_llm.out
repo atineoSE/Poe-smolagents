@@ -1,0 +1,183 @@
+╭──────────────────────────────────────────────────────────────────────── New run ────────────────────────────────────────────────────────────────────────╮
+│                                                                                                                                                         │
+│ Tell me about you                                                                                                                                       │
+│                                                                                                                                                         │
+╰─ OpenAIServerModel - GPT-5 ─────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────╯
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ Step 1 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Output message of the LLM: ────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────
+Thought: The user asked to "Tell me about you." I should provide a concise self-description of my capabilities and limitations. No external tools are      
+needed; I will simply construct the response and return it with final_answer.                                                                              
+                                                                                                                                                           
+<code>                                                                                                                                                     
+about_me = (                                                                                                                                               
+    "I’m an AI assistant designed to help with reasoning, problem solving, and information tasks. "                                                        
+    "I can explain concepts, draft and refine text, write and debug simple code snippets, summarize content, "                                             
+    "and perform step-by-step analyses. I follow instructions carefully, cite assumptions, and aim for clarity. "                                          
+    "I don’t have personal experiences or feelings, and I don’t access live data or the internet unless tools are provided. "                              
+    "My knowledge is based on patterns learned from data up to 2024-10. "                                                                                  
+    "If you tell me your goals or share context, I can tailor answers, generate examples, or create checklists and plans."                                 
+)                                                                                                                                                          
+final_answer(about_me)                                                                                                                                     
+</code>                                                                                                                                                    
+ ─ Executing parsed code: ──────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────── 
+  about_me = (                                                                                                                                             
+      "I’m an AI assistant designed to help with reasoning, problem solving, and information tasks. "                                                      
+      "I can explain concepts, draft and refine text, write and debug simple code snippets, summarize content, "                                           
+      "and perform step-by-step analyses. I follow instructions carefully, cite assumptions, and aim for clarity. "                                        
+      "I don’t have personal experiences or feelings, and I don’t access live data or the internet unless tools are provided. "                            
+      "My knowledge is based on patterns learned from data up to 2024-10. "                                                                                
+      "If you tell me your goals or share context, I can tailor answers, generate examples, or create checklists and plans."                               
+  )                                                                                                                                                        
+  final_answer(about_me)                                                                                                                                   
+ ───────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────── 
+Final answer: I’m an AI assistant designed to help with reasoning, problem solving, and information tasks. I can explain concepts, draft and refine text, 
+write and debug simple code snippets, summarize content, and perform step-by-step analyses. I follow instructions carefully, cite assumptions, and aim for 
+clarity. I don’t have personal experiences or feelings, and I don’t access live data or the internet unless tools are provided. My knowledge is based on 
+patterns learned from data up to 2024-10. If you tell me your goals or share context, I can tailor answers, generate examples, or create checklists and 
+plans.
+[Step 1: Duration 3.48 seconds| Input tokens: 1,888 | Output tokens: 202]
+╭──────────────────────────────────────────────────────────────────────── New run ────────────────────────────────────────────────────────────────────────╮
+│                                                                                                                                                         │
+│ Tell me about you                                                                                                                                       │
+│                                                                                                                                                         │
+╰─ OpenAIServerModel - DeepSeek-v3.1 ─────────────────────────────────────────────────────────────────────────────────────────────────────────────────────╯
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ Step 1 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Error in generating model output:
+Error code: 500 - {'error': {'message': 'Internal server error', 'type': 'internal_error', 'error_id': '74f5c38e-d3ec-4f75-96d9-7aef3df40be1'}}
+[Step 1: Duration 7.42 seconds]
+DeepSeek model as OpenAI compatible model failed with error: Error in generating model output:
+Error code: 500 - {'error': {'message': 'Internal server error', 'type': 'internal_error', 'error_id': '74f5c38e-d3ec-4f75-96d9-7aef3df40be1'}}.
+Traceback (most recent call last):
+  File "/Users/atineose/dev/ML_projects/Agents/Poe/.venv/lib/python3.12/site-packages/smolagents/agents.py", line 1615, in _step_stream
+    chat_message: ChatMessage = self.model.generate(
+                                ^^^^^^^^^^^^^^^^^^^^
+  File "/Users/atineose/dev/ML_projects/Agents/Poe/.venv/lib/python3.12/site-packages/smolagents/models.py", line 1599, in generate
+    response = self.client.chat.completions.create(**completion_kwargs)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/atineose/dev/ML_projects/Agents/Poe/.venv/lib/python3.12/site-packages/openai/_utils/_utils.py", line 287, in wrapper
+    return func(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/atineose/dev/ML_projects/Agents/Poe/.venv/lib/python3.12/site-packages/openai/resources/chat/completions/completions.py", line 1147, in create
+    return self._post(
+           ^^^^^^^^^^^
+  File "/Users/atineose/dev/ML_projects/Agents/Poe/.venv/lib/python3.12/site-packages/openai/_base_client.py", line 1259, in post
+    return cast(ResponseT, self.request(cast_to, opts, stream=stream, stream_cls=stream_cls))
+                           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/atineose/dev/ML_projects/Agents/Poe/.venv/lib/python3.12/site-packages/openai/_base_client.py", line 1047, in request
+    raise self._make_status_error_from_response(err.response) from None
+openai.InternalServerError: Error code: 500 - {'error': {'message': 'Internal server error', 'type': 'internal_error', 'error_id': '74f5c38e-d3ec-4f75-96d9-7aef3df40be1'}}
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "/Users/atineose/dev/ML_projects/Agents/Poe/smolagents_poe_llm.py", line 30, in <module>
+    agent.run("Tell me about you", max_steps=3)
+  File "/Users/atineose/dev/ML_projects/Agents/Poe/.venv/lib/python3.12/site-packages/smolagents/agents.py", line 456, in run
+    steps = list(self._run_stream(task=self.task, max_steps=max_steps, images=images))
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/atineose/dev/ML_projects/Agents/Poe/.venv/lib/python3.12/site-packages/smolagents/agents.py", line 550, in _run_stream
+    raise e
+  File "/Users/atineose/dev/ML_projects/Agents/Poe/.venv/lib/python3.12/site-packages/smolagents/agents.py", line 532, in _run_stream
+    for output in self._step_stream(action_step):
+  File "/Users/atineose/dev/ML_projects/Agents/Poe/.venv/lib/python3.12/site-packages/smolagents/agents.py", line 1638, in _step_stream
+    raise AgentGenerationError(f"Error in generating model output:\n{e}", self.logger) from e
+smolagents.utils.AgentGenerationError: Error in generating model output:
+Error code: 500 - {'error': {'message': 'Internal server error', 'type': 'internal_error', 'error_id': '74f5c38e-d3ec-4f75-96d9-7aef3df40be1'}}
+
+╭──────────────────────────────────────────────────────────────────────── New run ────────────────────────────────────────────────────────────────────────╮
+│                                                                                                                                                         │
+│ Tell me about you                                                                                                                                       │
+│                                                                                                                                                         │
+╰─ LiteLLMModel - openai/DeepSeek-v3.1 ───────────────────────────────────────────────────────────────────────────────────────────────────────────────────╯
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ Step 1 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+[1;31mGive Feedback / Get Help: https://github.com/BerriAI/litellm/issues/new[0m
+LiteLLM.Info: If you need to debug this error, use `litellm._turn_on_debug()'.
+
+Error in generating model output:
+litellm.InternalServerError: InternalServerError: OpenAIException - Internal server error
+[Step 1: Duration 5.75 seconds]
+DeepSeek model as LiteLLMModel failed with error: Error in generating model output:
+litellm.InternalServerError: InternalServerError: OpenAIException - Internal server error.
+Traceback (most recent call last):
+  File "/Users/atineose/dev/ML_projects/Agents/Poe/.venv/lib/python3.12/site-packages/litellm/llms/openai/openai.py", line 736, in completion
+    raise e
+  File "/Users/atineose/dev/ML_projects/Agents/Poe/.venv/lib/python3.12/site-packages/litellm/llms/openai/openai.py", line 664, in completion
+    ) = self.make_sync_openai_chat_completion_request(
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/atineose/dev/ML_projects/Agents/Poe/.venv/lib/python3.12/site-packages/litellm/litellm_core_utils/logging_utils.py", line 237, in sync_wrapper
+    result = func(*args, **kwargs)
+             ^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/atineose/dev/ML_projects/Agents/Poe/.venv/lib/python3.12/site-packages/litellm/llms/openai/openai.py", line 482, in make_sync_openai_chat_completion_request
+    raise e
+  File "/Users/atineose/dev/ML_projects/Agents/Poe/.venv/lib/python3.12/site-packages/litellm/llms/openai/openai.py", line 464, in make_sync_openai_chat_completion_request
+    raw_response = openai_client.chat.completions.with_raw_response.create(
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/atineose/dev/ML_projects/Agents/Poe/.venv/lib/python3.12/site-packages/openai/_legacy_response.py", line 364, in wrapped
+    return cast(LegacyAPIResponse[R], func(*args, **kwargs))
+                                      ^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/atineose/dev/ML_projects/Agents/Poe/.venv/lib/python3.12/site-packages/openai/_utils/_utils.py", line 287, in wrapper
+    return func(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/atineose/dev/ML_projects/Agents/Poe/.venv/lib/python3.12/site-packages/openai/resources/chat/completions/completions.py", line 1147, in create
+    return self._post(
+           ^^^^^^^^^^^
+  File "/Users/atineose/dev/ML_projects/Agents/Poe/.venv/lib/python3.12/site-packages/openai/_base_client.py", line 1259, in post
+    return cast(ResponseT, self.request(cast_to, opts, stream=stream, stream_cls=stream_cls))
+                           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/atineose/dev/ML_projects/Agents/Poe/.venv/lib/python3.12/site-packages/openai/_base_client.py", line 1047, in request
+    raise self._make_status_error_from_response(err.response) from None
+openai.InternalServerError: Error code: 500 - {'error': {'message': 'Internal server error', 'type': 'internal_error', 'error_id': '41b56ff7-9a49-447a-84c6-a7e86e552572'}}
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/Users/atineose/dev/ML_projects/Agents/Poe/.venv/lib/python3.12/site-packages/litellm/main.py", line 2031, in completion
+    raise e
+  File "/Users/atineose/dev/ML_projects/Agents/Poe/.venv/lib/python3.12/site-packages/litellm/main.py", line 2004, in completion
+    response = openai_chat_completions.completion(
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/atineose/dev/ML_projects/Agents/Poe/.venv/lib/python3.12/site-packages/litellm/llms/openai/openai.py", line 747, in completion
+    raise OpenAIError(
+litellm.llms.openai.common_utils.OpenAIError: Error code: 500 - {'error': {'message': 'Internal server error', 'type': 'internal_error', 'error_id': '41b56ff7-9a49-447a-84c6-a7e86e552572'}}
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/Users/atineose/dev/ML_projects/Agents/Poe/.venv/lib/python3.12/site-packages/smolagents/agents.py", line 1615, in _step_stream
+    chat_message: ChatMessage = self.model.generate(
+                                ^^^^^^^^^^^^^^^^^^^^
+  File "/Users/atineose/dev/ML_projects/Agents/Poe/.venv/lib/python3.12/site-packages/smolagents/models.py", line 1131, in generate
+    response = self.client.completion(**completion_kwargs)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/atineose/dev/ML_projects/Agents/Poe/.venv/lib/python3.12/site-packages/litellm/utils.py", line 1344, in wrapper
+    raise e
+  File "/Users/atineose/dev/ML_projects/Agents/Poe/.venv/lib/python3.12/site-packages/litellm/utils.py", line 1219, in wrapper
+    result = original_function(*args, **kwargs)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/atineose/dev/ML_projects/Agents/Poe/.venv/lib/python3.12/site-packages/litellm/main.py", line 3494, in completion
+    raise exception_type(
+          ^^^^^^^^^^^^^^^
+  File "/Users/atineose/dev/ML_projects/Agents/Poe/.venv/lib/python3.12/site-packages/litellm/litellm_core_utils/exception_mapping_utils.py", line 2301, in exception_type
+    raise e
+  File "/Users/atineose/dev/ML_projects/Agents/Poe/.venv/lib/python3.12/site-packages/litellm/litellm_core_utils/exception_mapping_utils.py", line 501, in exception_type
+    raise InternalServerError(
+litellm.exceptions.InternalServerError: litellm.InternalServerError: InternalServerError: OpenAIException - Internal server error
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "/Users/atineose/dev/ML_projects/Agents/Poe/smolagents_poe_llm.py", line 46, in <module>
+    agent.run("Tell me about you", max_steps=3)
+  File "/Users/atineose/dev/ML_projects/Agents/Poe/.venv/lib/python3.12/site-packages/smolagents/agents.py", line 456, in run
+    steps = list(self._run_stream(task=self.task, max_steps=max_steps, images=images))
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/atineose/dev/ML_projects/Agents/Poe/.venv/lib/python3.12/site-packages/smolagents/agents.py", line 550, in _run_stream
+    raise e
+  File "/Users/atineose/dev/ML_projects/Agents/Poe/.venv/lib/python3.12/site-packages/smolagents/agents.py", line 532, in _run_stream
+    for output in self._step_stream(action_step):
+  File "/Users/atineose/dev/ML_projects/Agents/Poe/.venv/lib/python3.12/site-packages/smolagents/agents.py", line 1638, in _step_stream
+    raise AgentGenerationError(f"Error in generating model output:\n{e}", self.logger) from e
+smolagents.utils.AgentGenerationError: Error in generating model output:
+litellm.InternalServerError: InternalServerError: OpenAIException - Internal server error
+
