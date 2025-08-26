@@ -1,4 +1,3 @@
-import json
 import re
 from collections.abc import Generator
 from typing import Any
@@ -33,21 +32,41 @@ def extract_code_from_text(text: str, code_block_tags: tuple[str, str]) -> str |
     Returns the *last* code block whose opening tag appears at the beginning
     of a line.
     """
-    # Revised pattern to match only if the code block starts at the beginning of the line
+    # UPDATED: Revised pattern to match only if the code block starts at the beginning of the line
+    # It helps for thinking models prefixing with >
+    # BEFORE:
+    # pattern = rf"{code_block_tags[0]}(.*?){code_block_tags[1]}"
+    # AFTER:
     pattern = (
         rf"(?m)^{re.escape(code_block_tags[0])}(.*?){re.escape(code_block_tags[1])}"
     )
+    # -------
+
     matches = re.findall(pattern, text, re.DOTALL)
     if matches:
-        # Revised logic to return just the last match
+        # UPDATED: Revised logic to return just the last match
+        # It helps for thinking models, which draft the code block
+        # BEFORE:
+        # return "\n\n".join(match.strip() for match in matches)
+        # AFTER:
         return matches[-1].strip()
+        # -------
     return None
 
 
 class PoeCodeAgent(CodeAgent):
-    def _generate_model_output(
-        self, input_messages: list[ChatMessage], memory_step: ActionStep
-    ):
+    def _step_stream(
+        self, memory_step: ActionStep
+    ) -> Generator[ChatMessageStreamDelta | ToolCall | ToolOutput | ActionOutput]:
+        """
+        Perform one step in the ReAct framework: the agent thinks, acts, and observes the result.
+        Yields ChatMessageStreamDelta during the run if streaming is enabled.
+        At the end, yields either None if the step is not final, or the final answer.
+        """
+        memory_messages = self.write_memory_to_messages()
+
+        input_messages = memory_messages.copy()
+        ### Generate model output ###
         memory_step.model_input_messages = input_messages
         stop_sequences = ["Observation:", "Calling tools:"]
         if self.code_block_tags[1] not in self.code_block_tags[0]:
@@ -110,33 +129,11 @@ class PoeCodeAgent(CodeAgent):
                 f"Error in generating model output:\n{e}", self.logger
             ) from e
 
-    def _step_stream(
-        self, memory_step: ActionStep
-    ) -> Generator[ChatMessageStreamDelta | ToolCall | ToolOutput | ActionOutput]:
-        """
-        Perform one step in the ReAct framework: the agent thinks, acts, and observes the result.
-        Yields ChatMessageStreamDelta during the run if streaming is enabled.
-        At the end, yields either None if the step is not final, or the final answer.
-        """
-        memory_messages = self.write_memory_to_messages()
-        input_messages = memory_messages.copy()
-
-        ### Generate model output ###
-        gen = self._generate_model_output(
-            input_messages=input_messages, memory_step=memory_step
-        )
-        if self.stream_outputs:
-            yield from gen  # Stream all events
-        else:
-            # Exhaust the generator to execute the non-streaming code
-            for _ in gen:
-                pass
-        output_text = memory_step.model_output
-
         ### Parse output ###
         try:
             if self._use_structured_outputs_internally:
-                code_action = json.loads(output_text)["code"]
+                # UPDATED: add a pre-processing step
+                # code_action = json.loads(output_text)["code"]
                 code_action = (
                     extract_code_from_text(code_action, self.code_block_tags)
                     or code_action
@@ -206,10 +203,6 @@ class PoeCodeAgent(CodeAgent):
                 ),
             ]
         self.logger.log(Group(*execution_outputs_console), level=LogLevel.INFO)
-        memory_step.action_output = code_output.output
-        yield ActionOutput(
-            output=code_output.output, is_final_answer=code_output.is_final_answer
-        )
         memory_step.action_output = code_output.output
         yield ActionOutput(
             output=code_output.output, is_final_answer=code_output.is_final_answer
