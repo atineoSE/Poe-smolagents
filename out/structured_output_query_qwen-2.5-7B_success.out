@@ -1,0 +1,29 @@
+╭──────────────────────────────────────────────────────────────────────── New run ────────────────────────────────────────────────────────────────────────╮
+│                                                                                                                                                         │
+│ What is the system information?                                                                                                                         │
+│                                                                                                                                                         │
+╰─ OpenAIServerModel - Qwen-2.5-7B-T ─────────────────────────────────────────────────────────────────────────────────────────────────────────────────────╯
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ Step 1 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Output message of the LLM: ────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────
+{"thought": "To get the system information, I will use the `get_system_info` function provided.", "code": "system_info =                                   
+get_system_info()\nprint(system_info)"}                                                                                                                    
+ ─ Executing parsed code: ──────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────── 
+  system_info = get_system_info()                                                                                                                          
+  print(system_info)                                                                                                                                       
+ ───────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────── 
+Execution logs:
+cpu_percent=14.9 memory_total_mb=16384 memory_used_mb=5411
+
+Out: None
+[Step 1: Duration 3.13 seconds| Input tokens: 1,782 | Output tokens: 39]
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ Step 2 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Output message of the LLM: ────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────
+{"thought": "The system information has been collected and printed. Now I will use the `final_answer` function to provide the final answer.", "code":      
+"final_answer(system_info)"}                                                                                                                               
+ ─ Executing parsed code: ──────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────── 
+  final_answer(system_info)                                                                                                                                
+ ───────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────── 
+Final answer: cpu_percent=14.9 memory_total_mb=16384 memory_used_mb=5411
+[Step 2: Duration 1.38 seconds| Input tokens: 3,682 | Output tokens: 78]
+Result: cpu_percent=14.9 memory_total_mb=16384 memory_used_mb=5411
+Result type: <class '__main__.System'>
