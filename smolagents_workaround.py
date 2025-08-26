@@ -51,8 +51,17 @@ def get_system_info() -> dict:
     Collects basic system metrics.
 
     Returns:
-        dict: A dictionary containing CPU usage, memory usage,
-              and swap usage information.
+        dict: A dictionary with the following keys:
+            - ``cpu_percent`` (float): Current CPU usage percentage.
+            - ``memory_total_mb`` (int): Total physical memory in megabytes.
+            - ``memory_used_mb`` (int): Amount of physical memory currently used (MiB).
+            - ``memory_percent`` (float): Percentage of physical memory in use.
+            - ``swap_total_mb`` (int): Total swap space in megabytes.
+            - ``swap_used_mb`` (int): Amount of swap currently used (MiB).
+            - ``swap_percent`` (float): Percentage of swap space in use.
+
+            All numeric values are derived from ``psutil`` and are rounded down
+            to the nearest integer where applicable.
     """
     cpu_percent = psutil.cpu_percent(interval=1)
     virtual_mem = psutil.virtual_memory()
