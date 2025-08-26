@@ -50,3 +50,4 @@ if __name__ == "__main__":
     result = agent.run("What is the system information?", max_steps=3)
     print(f"Result: {result}")
     print(f"Result type: {type(result)}")
+    agent.run("Are there more than 20 MB of memory free?", max_steps=3, reset=False)
