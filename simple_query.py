@@ -1,11 +1,15 @@
 from args import args
 from stats import dump_stats
-from wrapped_agents import WrappedCodeAgent, get_agent_model
+from wrapped_agents import WrappedCodeAgent, WrappedToolCallingAgent, get_agent_model
 
 if __name__ == "__main__":
     model_id = args.model_id
     model = get_agent_model(model_id)
-    agent = WrappedCodeAgent(
+    agent_class = (
+        WrappedCodeAgent if args.agent_type == "code" else WrappedToolCallingAgent
+    )
+
+    agent = agent_class(
         tools=[],
         model=model,
         verbosity_level=2,
