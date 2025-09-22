@@ -5,15 +5,15 @@ from wrapped_agents import WrappedCodeAgent, WrappedToolCallingAgent, get_agent_
 if __name__ == "__main__":
     model_id = args.model_id
     model = get_agent_model(model_id)
-    agent_class = (
-        WrappedCodeAgent if args.agent_type == "code" else WrappedToolCallingAgent
-    )
+    agent_type = args.agent_type
+    agent_class = WrappedCodeAgent if agent_type == "code" else WrappedToolCallingAgent
 
+    agent_name = f"{agent_type.replace('-', '_')}_agent"
     agent = agent_class(
         tools=[],
         model=model,
         verbosity_level=2,
-        name="base_agent",
+        name=agent_name,
     )
     agent.run("Tell me about you", max_steps=3)
 
