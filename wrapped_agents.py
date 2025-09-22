@@ -117,7 +117,7 @@ def get_all_messages(manager_agent: MultiStepAgent) -> list[str]:
 @property
 def total_input_tokens(self) -> int:
     managed_agents_count = [
-        agent.total_input_tokens() for agent in self.managed_agents.values()
+        agent.total_input_tokens for agent in self.managed_agents.values()
     ]
     return sum(managed_agents_count) + self.monitor.total_input_token_count
 
