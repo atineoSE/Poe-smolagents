@@ -1,8 +1,12 @@
+import ast
 import json
+import os
 import re
 from collections.abc import Generator
+from copy import deepcopy
 from typing import Any
 
+from dotenv import load_dotenv
 from rich.console import Group
 from rich.live import Live
 from rich.markdown import Markdown
@@ -18,13 +22,149 @@ from smolagents import (
     ChatMessageStreamDelta,
     CodeAgent,
     LogLevel,
+    MemoryStep,
+    MultiStepAgent,
+    OpenAIServerModel,
     ToolCall,
+    ToolCallingAgent,
     ToolOutput,
     agglomerate_stream_deltas,
     fix_final_answer_code,
+    models,
     parse_code_blobs,
     truncate_content,
 )
+
+load_dotenv()
+
+POE_API_KEY = os.environ.get("POE_API_KEY", "")
+if not POE_API_KEY:
+    raise ValueError("Could not find POE_API_KEY variable in the environment")
+POE_BASE_URL = os.environ.get("POE_BASE_URL", "")
+if not POE_BASE_URL:
+    raise ValueError("Could not find POE_BASE_URL variable in the environment")
+
+
+def get_agent_model(model_id: str) -> OpenAIServerModel:
+    return OpenAIServerModel(
+        model_id=model_id, api_base=POE_BASE_URL, api_key=POE_API_KEY
+    )
+
+
+TOOLS_LOG_PREFIX = "Calling tools:\n"
+
+
+def _extract_log(content: str) -> str:
+    if content.startswith(TOOLS_LOG_PREFIX):
+        tools = content.split(TOOLS_LOG_PREFIX)[-1]
+        new_content = ""
+        try:
+            for t in ast.literal_eval(tools):
+                function = t.get("function", {}).get("name", "")
+                new_content += f"Function: {function}\nArguments:\n"
+                arguments = t.get("function", {}).get("arguments", {})
+                if isinstance(arguments, dict):
+                    for k, v in arguments.items():
+                        new_content += f"\t{k}: {v}\n"
+                else:
+                    new_content += arguments
+            content = new_content
+        except (ValueError, SyntaxError) as error:
+            print(f"Error extracting tool log.\nContent: {content}\n Error: {error}")
+
+    return content
+
+
+def _sort_memory_steps(steps: list[MemoryStep]) -> list[MemoryStep]:
+    def _get_start_time(step):
+        timing = getattr(step, "timing", None)
+        return getattr(timing, "start_time", None)
+
+    return sorted(
+        steps,
+        key=lambda step: (
+            _get_start_time(step) is not None,
+            _get_start_time(step) or 0,
+        ),
+    )
+
+
+def get_all_messages(manager_agent: MultiStepAgent) -> list[str]:
+    all_steps = manager_agent.all_memory_steps
+    sorted_steps = _sort_memory_steps(all_steps)
+
+    all_messages = []
+    for step in sorted_steps:
+        messages = step.to_messages()
+        all_messages.append({step.agent_name: messages})
+
+    exported_messages = []
+    for messages in all_messages:
+        for agent_name, agent_messages in messages.items():
+            for agent_message in agent_messages:
+                role = agent_message.role.value.upper()
+                contents = [_extract_log(e["text"]) for e in agent_message.content]
+                str = f"Agent: {agent_name.upper()}\n"
+                str += f"Role: {role}\n"
+                str += "------------------\n"
+                str += "\n".join(contents)
+                str += "\n==================\n\n"
+                exported_messages.append(str)
+
+    return exported_messages
+
+
+@property
+def total_input_tokens(self) -> int:
+    managed_agents_count = [
+        agent.total_input_tokens() for agent in self.managed_agents.values()
+    ]
+    return sum(managed_agents_count) + self.monitor.total_input_token_count
+
+
+@property
+def all_memory_steps(self) -> dict[str, list[MemoryStep]]:
+    # Get managed agents steps
+    managed_agent_steps = [
+        step
+        for agent in self.managed_agents.values()
+        for step in agent.all_memory_steps
+    ]
+
+    # Get own steps and tag with name
+    agent_name = self.name if self.name else "unnamed_agent"
+    steps = self.memory.steps
+    for step in steps:
+        setattr(step, "agent_name", agent_name)
+
+    return steps + managed_agent_steps
+
+
+MultiStepAgent.total_input_tokens = total_input_tokens
+MultiStepAgent.all_memory_steps = all_memory_steps
+
+
+class WrappedToolCallingAgent(ToolCallingAgent):
+    def execute_tool_call(self, tool_name: str, arguments: dict[str, str] | str) -> Any:
+        # Provide empty additional args if missing, which seems to be a common way
+        # for the agent to trip on the tool call
+        print(f"AGENT {self.name}: Calling tool {tool_name} with arguments {arguments}")
+        updated_arguments = deepcopy(arguments)
+        if (
+            tool_name.endswith("agent")
+            and isinstance(updated_arguments, dict)
+            and not updated_arguments.get("additional_args")
+        ):
+            updated_arguments["additional_args"] = {}
+        return super().execute_tool_call(
+            tool_name=tool_name, arguments=updated_arguments
+        )
+
+
+# Monkey patch the function which describes whether model supports stop parameters
+# to always return False.
+# This effectively prevents the Poe API call from failing on some models
+models.supports_stop_parameter = lambda model_id: False
 
 
 def extract_code_from_text(text: str, code_block_tags: tuple[str, str]) -> str | None:
@@ -69,7 +209,7 @@ def extract_internal_structure_text(text: str) -> str:
     return text[start_match.start() :]
 
 
-class PoeCodeAgent(CodeAgent):
+class WrappedCodeAgent(CodeAgent):
     def _step_stream(
         self, memory_step: ActionStep
     ) -> Generator[ChatMessageStreamDelta | ToolCall | ToolOutput | ActionOutput]:
